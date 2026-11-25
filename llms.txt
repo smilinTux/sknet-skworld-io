@@ -24,6 +24,6 @@ pins every image by tag. Built on Akvorado (AGPL-3.0) and ntopng Community (GPLv
 
 sknet is part of the **smilinTux sovereign AI ecosystem**, a suite of open-source tools built by
 its creators to give humans and AI agents genuine, authentic infrastructure they can own and
-trust. No corporate clouds, no black-box SaaS middlemen. MIT License.
+trust. No corporate clouds, no black-box SaaS middlemen. Ecosystem code is open source (skstacks, and so sknet, is AGPL-3.0; this site is MIT).
 
 Other ecosystem projects: [SKWorld](https://skworld.io), [SKStacks](https://skstacks.skworld.io), [sksec](https://sksec.skworld.io), [skhub](https://skhub.skworld.io), [skgateway](https://skgateway.skworld.io), [skpatch](https://skpatch.skworld.io)
