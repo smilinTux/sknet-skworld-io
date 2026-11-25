@@ -1,0 +1,13 @@
+{
+  "repo": "smilinTux/skstacks",
+  "branch": "main",
+  "path": "v1/ansible/optional/sknet/docs",
+  "generated": "2026-11-25",
+  "note": "Placeholder committed fallback for the /docs viewer when the GitHub Contents API is unavailable or rate-limited. Regenerate from: python .github/scripts/docs-manifest-gen.py smilinTux/skstacks --path v1/ansible/optional/sknet/docs --out docs-manifest.json",
+  "docs": [
+    { "name": "overview.md", "title": "Overview" },
+    { "name": "architecture.md", "title": "Architecture" },
+    { "name": "multi-hop-pattern.md", "title": "Multi hop pattern" },
+    { "name": "operations.md", "title": "Operations" }
+  ]
+}

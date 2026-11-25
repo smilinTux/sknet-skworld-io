@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "diagram_type": "dataflow",
+  "meta": {
+    "title": "sknet Data Flow",
+    "subtitle": "packets to flow records to enriched rows to a gated console",
+    "output": "sknet.dataflow.html",
+    "viewBox": [
+      1080,
+      600
+    ],
+    "animation": "trace",
+    "quality_profile": "showcase"
+  },
+  "stages": [
+    {
+      "label": "Observe"
+    },
+    {
+      "label": "Export"
+    },
+    {
+      "label": "Collect"
+    },
+    {
+      "label": "Store"
+    },
+    {
+      "label": "View"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "traffic",
+      "type": "external",
+      "label": "Network Traffic",
+      "sublabel": "each hop interface",
+      "stage": 0,
+      "row": 1,
+      "tag": "source"
+    },
+    {
+      "id": "softflowd",
+      "type": "backend",
+      "label": "softflowd",
+      "sublabel": "one per interface",
+      "stage": 1,
+      "row": 0,
+      "tag": "internal"
+    },
+    {
+      "id": "inlet",
+      "type": "backend",
+      "label": "Akvorado Inlet",
+      "sublabel": "allowlisted UDP",
+      "stage": 2,
+      "row": 1,
+      "width": 150,
+      "tag": "internal"
+    },
+    {
+      "id": "kafka",
+      "type": "messagebus",
+      "label": "Kafka",
+      "sublabel": "buffer",
+      "stage": 2,
+      "row": 0,
+      "tag": "internal"
+    },
+    {
+      "id": "outlet",
+      "type": "backend",
+      "label": "Outlet",
+      "sublabel": "enrich, network names",
+      "stage": 3,
+      "row": 0,
+      "tag": "internal"
+    },
+    {
+      "id": "clickhouse",
+      "type": "database",
+      "label": "ClickHouse",
+      "sublabel": "TTL retention",
+      "stage": 3,
+      "row": 1,
+      "tag": "flow store"
+    },
+    {
+      "id": "ntopng",
+      "type": "backend",
+      "label": "ntopng Community",
+      "sublabel": "live capture",
+      "stage": 3,
+      "row": 2,
+      "width": 150,
+      "tag": "live only"
+    },
+    {
+      "id": "console",
+      "type": "frontend",
+      "label": "Akvorado Console",
+      "sublabel": "history and graphs",
+      "stage": 4,
+      "row": 1,
+      "width": 150,
+      "tag": "SSO + allowlist"
+    },
+    {
+      "id": "live",
+      "type": "frontend",
+      "label": "ntopng UI",
+      "sublabel": "live view",
+      "stage": 4,
+      "row": 2,
+      "tag": "SSO + allowlist"
+    }
+  ],
+  "flows": [
+    {
+      "id": "traffic-softflowd",
+      "from": "traffic",
+      "to": "softflowd",
+      "label": "packet capture",
+      "classification": "internal",
+      "variant": "default"
+    },
+    {
+      "id": "softflowd-inlet",
+      "from": "softflowd",
+      "to": "inlet",
+      "label": "NetFlow v9 UDP 2055",
+      "classification": "sensitive: metadata",
+      "variant": "security"
+    },
+    {
+      "id": "inlet-kafka",
+      "from": "inlet",
+      "to": "kafka",
+      "label": "flow messages",
+      "classification": "internal",
+      "variant": "default",
+      "labelDy": -30
+    },
+    {
+      "id": "kafka-outlet",
+      "from": "kafka",
+      "to": "outlet",
+      "label": "consume",
+      "classification": "internal",
+      "variant": "default"
+    },
+    {
+      "id": "outlet-ch",
+      "from": "outlet",
+      "to": "clickhouse",
+      "label": "enriched rows",
+      "classification": "internal",
+      "variant": "emphasis"
+    },
+    {
+      "id": "ch-console",
+      "from": "clickhouse",
+      "to": "console",
+      "label": "queries",
+      "classification": "sensitive: behind SSO",
+      "variant": "emphasis"
+    },
+    {
+      "id": "traffic-ntopng",
+      "from": "traffic",
+      "to": "ntopng",
+      "label": "live capture",
+      "classification": "internal",
+      "variant": "dashed",
+      "labelDy": 40
+    },
+    {
+      "id": "ntopng-live",
+      "from": "ntopng",
+      "to": "live",
+      "label": "web UI",
+      "classification": "sensitive: behind SSO",
+      "variant": "security"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "emerald",
+      "title": "Primary path",
+      "items": [
+        "Flows leave each hop as NetFlow v9 and land in one collector",
+        "Kafka buffers, the outlet enriches, ClickHouse keeps the history"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Sensitivity labels",
+      "items": [
+        "Flow metadata shows who talks to whom, so both UIs sit behind SSO and an allowlist",
+        "Collector ports accept only listed exporter addresses"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Live is separate",
+      "items": [
+        "ntopng captures on the gateway host and keeps no estate-wide history",
+        "Akvorado holds the history, ntopng answers what is happening right now"
+      ]
+    }
+  ]
+}

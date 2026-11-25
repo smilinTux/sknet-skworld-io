@@ -1,0 +1,224 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "sknet Rollout Order",
+    "subtitle": "collector first, then exporters hop by hop, then the live view",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "output": "sknet.workflow.html"
+  },
+  "lanes": [
+    {
+      "id": "plan",
+      "label": "Plan"
+    },
+    {
+      "id": "collector",
+      "label": "Collector"
+    },
+    {
+      "id": "exporters",
+      "label": "Exporters"
+    },
+    {
+      "id": "live",
+      "label": "Live view"
+    },
+    {
+      "id": "verify",
+      "label": "Verify"
+    }
+  ],
+  "phases": [
+    {
+      "id": "prepare",
+      "label": "Prepare",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "deploy",
+      "label": "Deploy",
+      "fromCol": 2,
+      "toCol": 3,
+      "variant": "emphasis"
+    },
+    {
+      "id": "prove",
+      "label": "Prove",
+      "fromCol": 4,
+      "toCol": 5,
+      "variant": "dashed"
+    }
+  ],
+  "mainPath": [
+    "pick_node",
+    "list_hops",
+    "deploy_stack",
+    "allowlist",
+    "exp_hops",
+    "see_flows"
+  ],
+  "nodes": [
+    {
+      "id": "pick_node",
+      "lane": "plan",
+      "col": 0,
+      "type": "frontend",
+      "label": "Pick data node",
+      "sublabel": "AVX2, local disk",
+      "width": 150
+    },
+    {
+      "id": "list_hops",
+      "lane": "plan",
+      "col": 1,
+      "type": "frontend",
+      "label": "List hops",
+      "sublabel": "interfaces, ifindex, class",
+      "width": 150
+    },
+    {
+      "id": "deploy_stack",
+      "lane": "collector",
+      "col": 2,
+      "type": "backend",
+      "label": "Deploy stack",
+      "sublabel": "Akvorado, Kafka, ClickHouse",
+      "tag": "swarm",
+      "width": 150
+    },
+    {
+      "id": "allowlist",
+      "lane": "collector",
+      "col": 3,
+      "type": "security",
+      "label": "Port allowlist",
+      "sublabel": "exporter addresses only",
+      "width": 150
+    },
+    {
+      "id": "exp_hops",
+      "lane": "exporters",
+      "col": 3,
+      "type": "backend",
+      "label": "Exporter play",
+      "sublabel": "softflowd per interface",
+      "tag": "idempotent",
+      "width": 150
+    },
+    {
+      "id": "live_play",
+      "lane": "live",
+      "col": 4,
+      "type": "backend",
+      "label": "Live play",
+      "sublabel": "ntopng, memory capped",
+      "width": 150
+    },
+    {
+      "id": "see_flows",
+      "lane": "verify",
+      "col": 4,
+      "type": "cloud",
+      "label": "Flows visible",
+      "sublabel": "console shows each hop",
+      "tag": "done",
+      "width": 150
+    },
+    {
+      "id": "no_flows",
+      "lane": "verify",
+      "col": 5,
+      "type": "security",
+      "label": "No flows",
+      "sublabel": "check allowlist, source IP",
+      "width": 150
+    }
+  ],
+  "edges": [
+    {
+      "id": "pick-to-list",
+      "from": "pick_node",
+      "to": "list_hops",
+      "variant": "default"
+    },
+    {
+      "id": "list-to-deploy",
+      "from": "list_hops",
+      "to": "deploy_stack",
+      "variant": "emphasis"
+    },
+    {
+      "id": "deploy-to-allow",
+      "from": "deploy_stack",
+      "to": "allowlist",
+      "variant": "security",
+      "label": "firewall"
+    },
+    {
+      "id": "allow-to-exp",
+      "from": "allowlist",
+      "to": "exp_hops",
+      "variant": "emphasis"
+    },
+    {
+      "id": "exp-to-live",
+      "from": "exp_hops",
+      "to": "live_play",
+      "variant": "dashed",
+      "label": "optional"
+    },
+    {
+      "id": "exp-to-see",
+      "from": "exp_hops",
+      "to": "see_flows",
+      "variant": "emphasis",
+      "label": "flows arrive"
+    },
+    {
+      "id": "see-to-nof",
+      "from": "see_flows",
+      "to": "no_flows",
+      "variant": "security",
+      "label": "if empty",
+      "role": "error"
+    },
+    {
+      "id": "nof-retry",
+      "from": "no_flows",
+      "to": "exp_hops",
+      "variant": "dashed",
+      "label": "fix and rerun",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Collector first",
+      "items": [
+        "Deploy the stack and its port allowlist before any exporter starts",
+        "An empty exporter list fails the deploy with a clear message"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Hop by hop",
+      "items": [
+        "Each exporter play is idempotent and supports state absent",
+        "Pinned interface indexes keep graphs stable across reboots"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Live view is optional",
+      "items": [
+        "ntopng is a separate host play with a hard memory cap",
+        "Skip it where a gateway has no RAM to spare"
+      ]
+    }
+  ]
+}

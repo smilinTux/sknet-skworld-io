@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "sknet Component Map",
+    "subtitle": "Network flow visibility as an skstacks service: exporters, one collector, two gated UIs",
+    "output": "sknet.architecture.html",
+    "quality_profile": "showcase"
+  },
+  "components": [
+    { "id": "site_exp", "type": "external", "label": "Isolated Site Exporter", "sublabel": "softflowd, one-way UDP", "pos": [40, 40], "size": [170, 64], "tag": "one port" },
+    { "id": "hop_exp", "type": "backend", "label": "Hop Exporters", "sublabel": "softflowd per interface", "pos": [40, 200], "size": [170, 64] },
+    { "id": "ntopng", "type": "backend", "label": "ntopng Community", "sublabel": "live view, memory capped", "pos": [40, 360], "size": [170, 64] },
+    { "id": "inlet", "type": "backend", "label": "Akvorado Inlet", "sublabel": "UDP 2055 + 4739, host mode", "pos": [320, 120], "size": [170, 64], "tag": "allowlisted" },
+    { "id": "kafka", "type": "messagebus", "label": "Kafka", "sublabel": "single node, KRaft", "pos": [560, 120], "size": [150, 64] },
+    { "id": "outlet", "type": "backend", "label": "Akvorado Outlet", "sublabel": "enrich and write", "pos": [800, 120], "size": [150, 64] },
+    { "id": "clickhouse", "type": "database", "label": "ClickHouse", "sublabel": "local disk, TTL retention", "pos": [1040, 120], "size": [160, 64] },
+    { "id": "orch", "type": "backend", "label": "Orchestrator", "sublabel": "config, schema, networks", "pos": [560, 280], "size": [150, 64] },
+    { "id": "console", "type": "frontend", "label": "Akvorado Console", "sublabel": "estate-wide history", "pos": [1040, 280], "size": [160, 64] },
+    { "id": "traefik", "type": "backend", "label": "Traefik", "sublabel": "two routers, CIDR allowlist", "pos": [800, 440], "size": [150, 64] },
+    { "id": "sso", "type": "security", "label": "Authentik SSO", "sublabel": "forward auth", "pos": [1040, 440], "size": [160, 64] },
+    { "id": "operator", "type": "external", "label": "Operator Browser", "sublabel": "mesh or LAN only", "pos": [800, 600], "size": [150, 64] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "Collector node (swarm, pinned, local disk)", "wraps": ["inlet", "kafka", "outlet", "clickhouse", "orch", "console"] },
+    { "kind": "security-group", "label": "Gateway host", "wraps": ["hop_exp", "ntopng"] }
+  ],
+  "connections": [
+    { "id": "site-to-inlet", "from": "site_exp", "to": "inlet", "label": "NetFlow v9, one-way", "variant": "security" },
+    { "id": "hop-to-inlet", "from": "hop_exp", "to": "inlet", "label": "NetFlow v9", "variant": "emphasis" },
+    { "id": "inlet-to-kafka", "from": "inlet", "to": "kafka", "label": "raw flows", "variant": "default" },
+    { "id": "kafka-to-outlet", "from": "kafka", "to": "outlet", "label": "consume", "variant": "default" },
+    { "id": "outlet-to-ch", "from": "outlet", "to": "clickhouse", "label": "enriched rows", "variant": "emphasis" },
+    { "id": "orch-config", "from": "orch", "to": "inlet", "label": "config", "variant": "dashed" },
+    { "id": "console-query", "from": "console", "to": "clickhouse", "label": "queries", "variant": "default" },
+    { "id": "traefik-console", "from": "traefik", "to": "console", "label": "sknet router", "variant": "default" },
+    { "id": "traefik-ntopng", "from": "traefik", "to": "ntopng", "label": "sknet-live router", "variant": "default" },
+    { "id": "sso-gate", "from": "sso", "to": "traefik", "label": "auth", "variant": "security" },
+    { "id": "operator-traefik", "from": "operator", "to": "traefik", "label": "HTTPS", "variant": "emphasis" }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Two views, one service", "items": ["Akvorado gives estate-wide flow history across every hop", "ntopng Community gives a live view on the gateway host"] },
+    { "dot": "rose", "title": "Gated by default", "items": ["Both web routers sit behind SSO and a mesh or LAN CIDR allowlist", "The collector ports accept flows only from listed exporter addresses"] },
+    { "dot": "emerald", "title": "Upstream UIs kept", "items": ["Built on Akvorado (AGPL-3.0) and ntopng Community (GPLv3)", "No forks and no custom images, only pinned upstream tags"] }
+  ]
+}

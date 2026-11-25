@@ -1,0 +1,29 @@
+# sknet
+
+> See the traffic between your networks.
+
+sknet is an skstacks service for network flow visibility across mesh hops. Small softflowd exporters
+on each gateway or hop send unsampled NetFlow v9 over UDP to one collector. On that collector,
+Akvorado (inlet, Kafka, outlet, ClickHouse, console) keeps an estate-wide flow history on local disk
+with a TTL and a disk budget, and ntopng Community runs on the gateway host as a memory-capped live
+view. Both web UIs sit behind Traefik with SSO and a per-router CIDR allowlist for mesh and LAN
+addresses only, and the collector ports accept flows only from listed exporter addresses. Isolated
+sites get exactly one one-way telemetry exception: UDP to the collector's flow port, from the
+exporter address, to one collector. sknet keeps the upstream applications and logos unmodified and
+pins every image by tag. Built on Akvorado (AGPL-3.0) and ntopng Community (GPLv3).
+
+## Links
+
+- [Live site](https://sknet.skworld.io)
+- [Documentation](https://sknet.skworld.io/docs.html)
+- [Source code](https://github.com/smilinTux/skstacks)
+- [Akvorado](https://github.com/akvorado/akvorado)
+- [ntopng](https://www.ntop.org/products/traffic-analysis/ntop/)
+
+## About smilinTux
+
+sknet is part of the **smilinTux sovereign AI ecosystem**, a suite of open-source tools built by
+its creators to give humans and AI agents genuine, authentic infrastructure they can own and
+trust. No corporate clouds, no black-box SaaS middlemen. MIT License.
+
+Other ecosystem projects: [SKWorld](https://skworld.io), [SKStacks](https://skstacks.skworld.io), [sksec](https://sksec.skworld.io), [skhub](https://skhub.skworld.io), [skgateway](https://skgateway.skworld.io), [skpatch](https://skpatch.skworld.io)

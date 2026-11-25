@@ -1,0 +1,18 @@
+name: archify
+
+# Regenerates diagrams/*.html from diagrams/*.json with the pinned, reviewed Archify
+# build in the shared reusable workflow. Rule: smilinTux/sk-standards
+# standards/ARCHITECTURE_AND_DATAFLOW_STANDARD.md, guide: standards/archify-diagrams.md.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    uses: smilinTux/.github/.github/workflows/archify-build.yml@08ab9987405f0aced0d72343f9773976fae6f1ea

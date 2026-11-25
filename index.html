@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sknet · See the traffic between your networks 📡</title>
+  <meta name="description" content="sknet is an skstacks service for network flow visibility: Akvorado for estate-wide flow history, ntopng Community for a live view, softflowd exporters on each hop, all behind SSO and a mesh or LAN allowlist, with one one-way telemetry exception for isolated sites.">
+  <link rel="canonical" href="https://sknet.skworld.io/">
+  <meta name="theme-color" content="#080912">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="sknet · SKWorld">
+  <meta property="og:title" content="sknet · See the traffic between your networks">
+  <meta property="og:description" content="Akvorado flow history plus an ntopng live view, fed by softflowd exporters on every hop, behind SSO and an allowlist. An skstacks service, part of the SKWorld sovereign AI ecosystem.">
+  <meta property="og:url" content="https://sknet.skworld.io/">
+  <meta property="og:image" content="https://sknet.skworld.io/og.png">
+  <meta property="og:image:secure_url" content="https://sknet.skworld.io/og.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="sknet: see the traffic between your networks, Akvorado history and ntopng live view">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@smilinTux">
+  <meta name="twitter:creator" content="@smilinTux">
+  <meta name="twitter:title" content="sknet · See the traffic between your networks">
+  <meta name="twitter:description" content="Akvorado flow history plus an ntopng live view, fed by softflowd exporters on every hop, behind SSO and an allowlist.">
+  <meta name="twitter:image" content="https://sknet.skworld.io/og.png">
+  <meta name="twitter:image:alt" content="sknet: see the traffic between your networks">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📡</text></svg>">
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://skworld.io/#org",
+        "name": "smilinTux",
+        "url": "https://skworld.io",
+        "sameAs": ["https://github.com/smilinTux"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://sknet.skworld.io/#website",
+        "url": "https://sknet.skworld.io/",
+        "name": "sknet",
+        "description": "Network flow visibility as an skstacks service: Akvorado history, ntopng live view, softflowd exporters on every hop.",
+        "publisher": {"@id": "https://skworld.io/#org"}
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://sknet.skworld.io/#app",
+        "name": "sknet",
+        "description": "An skstacks role that runs Akvorado as an estate-wide flow collector and console, ntopng Community as a live view, and softflowd exporters on each network hop, behind SSO and a mesh or LAN allowlist.",
+        "url": "https://sknet.skworld.io/",
+        "applicationCategory": "NetworkApplication",
+        "operatingSystem": "Linux",
+        "codeRepository": "https://github.com/smilinTux/skstacks",
+        "license": "https://opensource.org/licenses/MIT",
+        "isPartOf": {"@id": "https://skworld.io/#org"},
+        "publisher": {"@id": "https://skworld.io/#org"}
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root{--accent:#818cf8;--rose:#fb7185;--ink:#e8eaf6;--muted:rgba(232,234,246,.72);--panel:rgba(129,140,248,.06);--line:rgba(129,140,248,.30)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,sans-serif;background:radial-gradient(ellipse at top,#14152b 0%,#080912 60%);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+    .wrap{max-width:1000px;margin:0 auto;padding:0 1.4rem}
+    .mono{font-family:'JetBrains Mono',monospace}
+    .eyebrow{color:var(--accent);letter-spacing:.18em;font-size:.8rem;text-transform:uppercase}
+    a{color:var(--rose);text-decoration:none}
+    a:hover{color:#fff}
+    nav{border-bottom:1px solid rgba(129,140,248,.15);padding:1rem 0;position:sticky;top:0;background:#080912;z-index:10}
+    nav .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem}
+    .nav-logo{font-family:'JetBrains Mono',monospace;font-weight:700;color:#fff;font-size:1rem;letter-spacing:.02em}
+    .nav-logo span{color:var(--accent)}
+    .nav-links{display:flex;gap:1.1rem;flex-wrap:wrap;font-size:.85rem}
+    .nav-links a{color:var(--muted)}
+    .nav-links a:hover{color:var(--accent)}
+    header{text-align:center;padding:4.5rem 0 3rem}
+    .icon{font-size:4rem;line-height:1}
+    h1{font-size:3.2rem;font-weight:800;letter-spacing:.03em;margin:.6rem 0 .2rem;background:linear-gradient(90deg,#fff,var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .tag{font-size:1.3rem;color:var(--accent);font-weight:600;margin-top:.4rem}
+    .sub{color:var(--muted);font-size:1.1rem;max-width:680px;margin:1rem auto 0}
+    .badges{margin:1.8rem 0 0;display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center}
+    .badge{border:1px solid var(--line);border-radius:999px;padding:.5rem 1.05rem;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--accent);background:var(--panel);transition:all .25s}
+    .badge:hover{border-color:var(--accent);color:#fff}
+    section{padding:2.6rem 0;border-top:1px solid rgba(255,255,255,.06)}
+    h2{font-size:1.7rem;color:#fff;margin-bottom:1rem;font-weight:700}
+    h2 .n{color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:1.1rem;margin-right:.5rem}
+    h3.sub-h{color:var(--accent);font-size:1.15rem;margin:1.6rem 0 .6rem;font-weight:700}
+    p{color:var(--muted);margin-bottom:.9rem}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1rem;margin-top:1rem}
+    .card{border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:1.2rem;background:rgba(255,255,255,.02)}
+    .card h3{color:var(--accent);font-size:1.05rem;margin-bottom:.4rem}
+    .card p{font-size:.95rem;margin:0}
+    ol.arts{list-style:none;counter-reset:a;margin-top:.6rem}
+    ol.arts li{counter-increment:a;border-left:2px solid var(--line);padding:.2rem 0 1rem 1.2rem;position:relative}
+    ol.arts li::before{content:counter(a);position:absolute;left:-.85rem;top:0;background:var(--accent);color:#080912;width:1.5rem;height:1.5rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:600;font-size:.8rem}
+    ol.arts strong{color:#fff}
+    .flow{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--rose);background:rgba(251,113,133,.05);border:1px solid rgba(251,113,133,.2);border-radius:12px;padding:1rem 1.2rem;overflow-x:auto;white-space:pre;margin-top:.6rem}
+    table.spec{width:100%;border-collapse:collapse;margin-top:1rem;font-size:.92rem}
+    table.spec th,table.spec td{padding:.6rem .8rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.08)}
+    table.spec th{color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+    table.spec td{color:var(--muted)}
+    table.spec td strong{color:#fff}
+    .cta{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1rem}
+    .btn{border:1px solid var(--line);border-radius:10px;padding:.7rem 1.3rem;font-family:'JetBrains Mono',monospace;font-size:.9rem;color:var(--accent);background:var(--panel);transition:all .25s}
+    .btn:hover{border-color:var(--accent);color:#fff}
+    .btn.bl{border-color:rgba(251,113,133,.35);color:var(--rose)}
+    .btn.bl:hover{border-color:var(--rose);color:#fff}
+    .callout{border:1px solid rgba(129,140,248,.45);background:linear-gradient(135deg,rgba(129,140,248,.1),rgba(251,113,133,.05));border-radius:16px;padding:1.6rem 1.8rem;margin-top:1.2rem}
+    .callout h3{color:#fff;font-size:1.15rem;margin-bottom:.6rem}
+    .callout h3 .tag-pill{display:inline-block;background:var(--accent);color:#080912;font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.2rem .55rem;border-radius:999px;margin-right:.5rem;vertical-align:middle;letter-spacing:.04em}
+    .callout ul{margin:.6rem 0 0 1.1rem;color:var(--muted)}
+    .callout li{margin-bottom:.5rem}
+    .callout code{color:var(--rose)}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.1rem;margin-top:1rem}
+    .shot{border:1px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden;background:#07050a}
+    .shot img{width:100%;display:block}
+    .shot figcaption{padding:.65rem .85rem;font-size:.82rem;color:var(--muted);border-top:1px solid rgba(255,255,255,.07)}
+    .shot figcaption a{color:var(--accent)}
+    .pill{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:.22rem .65rem;margin-left:.5rem;vertical-align:middle}
+    .pill.live{color:var(--accent);background:var(--panel);border:1px solid var(--line)}
+    .pill.weekly{color:var(--rose);background:rgba(251,113,133,.06);border:1px solid rgba(251,113,133,.3)}
+    footer{text-align:center;padding:3rem 0 2.5rem;color:rgba(255,255,255,.4);border-top:1px solid rgba(255,255,255,.06);margin-top:1rem}
+    footer .mono{font-size:.82rem}
+    .foot-links{display:flex;gap:1.4rem;flex-wrap:wrap;justify-content:center;margin:1.2rem 0;font-size:.85rem}
+    .foot-links a{color:var(--muted)}
+    .foot-links a:hover{color:var(--accent)}
+    @media(max-width:600px){h1{font-size:2.3rem}.icon{font-size:3rem}.nav-links{font-size:.76rem;gap:.7rem}}
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="wrap">
+      <a class="nav-logo" href="/">sk<span>net</span></a>
+      <div class="nav-links">
+        <a href="#what">What</a>
+        <a href="#how">How it works</a>
+        <a href="#hops">Hops</a>
+        <a href="#access">Access</a>
+        <a href="#components">Components</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#built-on">Built on</a>
+        <a href="/docs.html">Docs</a>
+        <a href="https://github.com/smilinTux/skstacks" target="_blank" rel="noopener">Source</a>
+        <a href="https://skworld.io" target="_blank" rel="noopener">🐧 SKWorld</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <div class="wrap">
+      <div class="icon">📡</div>
+      <div class="mono eyebrow">sknet · skstacks service</div>
+      <h1>sknet</h1>
+      <div class="tag">See the traffic between your networks.</div>
+      <p class="sub">sknet is an skstacks role that turns flow records from every network hop into one searchable history and one live view. Akvorado keeps the estate-wide record, ntopng Community shows what is happening right now, and small softflowd exporters on each gateway feed both. Web access is gated by SSO and a mesh or LAN allowlist, and isolated sites get exactly one one-way telemetry exception.</p>
+      <div class="badges">
+        <a class="badge" href="#what">📊 What it is</a>
+        <a class="badge" href="#hops">🧭 Multi-hop pattern</a>
+        <a class="badge" href="#architecture">🗺️ Architecture</a>
+        <a class="badge" href="https://github.com/smilinTux/skstacks" target="_blank" rel="noopener">💻 Code</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section id="what">
+      <h2>What sknet is</h2>
+      <p>Once a network is split into a trusted core, a mesh and a few one-way sites, "who is talking to whom, and how much" stops being obvious. sknet answers it without a SPAN port, a commercial probe or a new appliance: it deploys like every other skstacks service, documents itself, and keeps the upstream applications exactly as their authors built them.</p>
+      <div class="grid">
+        <div class="card"><h3>Estate-wide history</h3><p>Akvorado stores flows from every hop in ClickHouse, with retention sized to a fixed disk budget, so last week's traffic is still a query away.</p></div>
+        <div class="card"><h3>A live view</h3><p>ntopng Community runs on the gateway host with a hard memory cap, for the "what is happening right now" question Akvorado is not built for.</p></div>
+        <div class="card"><h3>Exporters per hop</h3><p>softflowd runs one instance per interface on the hosts you choose, with pinned interface indexes so graphs stay stable across reboots.</p></div>
+        <div class="card"><h3>Gated by default</h3><p>Both web UIs sit behind SSO and a CIDR allowlist, and the collector ports accept flows only from the exporter addresses you list.</p></div>
+        <div class="card"><h3>Small enough to run</h3><p>The whole collector stack defaults to a budget of about 3.5 GB of RAM and a 20 GB disk cap, on one pinned node with local disk.</p></div>
+        <div class="card"><h3>Upstream UIs kept</h3><p>No forks, no custom images, no re-skinning. Pinned upstream tags, upstream logos, credited below.</p></div>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2><span class="n">§</span>How it works</h2>
+      <ol class="arts">
+        <li><strong>Exporters observe.</strong> softflowd watches an interface and emits NetFlow v9 records over UDP, unsampled, to a single collector IPv4 address.</li>
+        <li><strong>The inlet collects.</strong> Akvorado's inlet listens on UDP 2055 (NetFlow) and 4739 (IPFIX), published in host mode so the exporter's source address survives, and only listed exporters are allowed through.</li>
+        <li><strong>Kafka buffers, the outlet enriches.</strong> Flows pass through a single-node Kafka, then the outlet adds interface names, network names and classification.</li>
+        <li><strong>ClickHouse stores.</strong> Enriched rows land on local disk with a TTL, never on network storage.</li>
+        <li><strong>The console answers.</strong> Akvorado's console queries ClickHouse for graphs, top talkers and per-interface breakdowns.</li>
+        <li><strong>ntopng shows live.</strong> On the gateway host, ntopng captures the same interfaces for an instant, memory-capped live view.</li>
+      </ol>
+      <div class="flow">exporters (softflowd) --NetFlow v9--> inlet --> Kafka --> outlet --> ClickHouse --> console
+gateway interfaces --live capture--> ntopng --> live view</div>
+    </section>
+
+    <section id="hops">
+      <h2><span class="n">§</span>Seeing flows across mesh hops</h2>
+      <p>A flow that crosses several networks is visible at every hop it touches. sknet's pattern is to put one exporter on each hop that matters and one collector where the data can live on local disk, then name the networks so the console reads like a map instead of a list of addresses.</p>
+      <table class="spec">
+        <tr><th>Example hop</th><th>What to export</th></tr>
+        <tr><td><strong>Gateway, LAN side</strong></td><td>The LAN interface, so internal traffic and what leaves the LAN is recorded (for example 192.0.2.0/24).</td></tr>
+        <tr><td><strong>Gateway, mesh and links</strong></td><td>The mesh interface and each site-to-site link interface, classified so the console can tell mesh from internet.</td></tr>
+        <tr><td><strong>Cloud VPC site</strong></td><td>One exporter at the site's edge. It is one-way: it can send telemetry to the collector and nothing else.</td></tr>
+      </table>
+      <div class="callout">
+        <h3><span class="tag-pill">one exception</span>Isolated sites send telemetry one way</h3>
+        <ul>
+          <li>The isolated site gets one policy: UDP to the collector's flow port, from the exporter address, to one collector. Nothing flows back.</li>
+          <li>The collector's firewall drops flow packets from every address that is not on the exporter list.</li>
+          <li>Because each hop reports separately, a flow crossing two exporters is counted at both. The docs explain how to read the console without double counting.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="access">
+      <h2><span class="n">§</span>Access and privacy</h2>
+      <p>Flow metadata reveals who talks to whom, so sknet treats it as sensitive from the first packet. Nothing is exposed publicly, and the web UIs are reachable only from the networks you name.</p>
+      <div class="grid">
+        <div class="card"><h3>SSO in front</h3><p>Two Traefik routers, one for the console and one for the live view, both require your identity provider (Authentik) before a page loads.</p></div>
+        <div class="card"><h3>CIDR allowlist</h3><p>A per-router allowlist middleware limits who can even reach the login. It defaults to private ranges and is set to your mesh and LAN in an instance.</p></div>
+        <div class="card"><h3>Mesh-only DNS</h3><p>Split DNS points the UI names at an internal address, so off-mesh resolvers either fail to resolve or hit the allowlist and get a 403.</p></div>
+        <div class="card"><h3>Placeholders in public</h3><p>The framework ships with documentation addresses only (192.0.2.0/24, 198.51.100.0/24). Real addresses and names live in your private instance repository.</p></div>
+      </div>
+    </section>
+
+    <section id="components">
+      <h2><span class="n">§</span>Components</h2>
+      <div class="gallery">
+        <figure class="shot">
+          <img src="img/diagram-architecture.png" alt="sknet component map: site and hop exporters, the Akvorado inlet, Kafka, outlet, ClickHouse and console on one collector node, ntopng on the gateway host, Traefik and SSO in front" loading="lazy">
+          <figcaption><span class="pill live">Interactive</span> Component map. <a href="diagrams/sknet.architecture.html" target="_blank" rel="noopener">Open the interactive version ↗</a></figcaption>
+        </figure>
+      </div>
+      <table class="spec" style="margin-top:1.5rem">
+        <tr><th>Component</th><th>Role</th></tr>
+        <tr><td><strong>softflowd</strong></td><td>Per-interface NetFlow v9 exporter from distro packages, installed by an idempotent play that also supports removal.</td></tr>
+        <tr><td><strong>Akvorado</strong></td><td>Inlet, outlet, orchestrator and console: the flow collector and the estate-wide web console.</td></tr>
+        <tr><td><strong>Kafka and ClickHouse</strong></td><td>Single-node Kafka (KRaft) as a buffer and ClickHouse as the store, both on local disk of the pinned data node.</td></tr>
+        <tr><td><strong>ntopng Community</strong></td><td>Live view as a pinned container on the gateway host, memory capped, bound to the LAN address behind Traefik.</td></tr>
+        <tr><td><strong>Traefik and SSO</strong></td><td>One router per UI, each with the SSO middleware and a per-service CIDR allowlist.</td></tr>
+        <tr><td><strong>Port allowlist</strong></td><td>Firewall rules on the data node that accept flow packets only from listed exporter addresses.</td></tr>
+      </table>
+    </section>
+
+    <section id="architecture">
+      <h2><span class="n">§</span>Architecture: three ways to read it</h2>
+      <p>Each diagram is a standalone, self-contained HTML page: explorable, with motion, and a dark/light toggle. They open in a new tab.</p>
+      <div class="gallery">
+        <figure class="shot">
+          <img src="img/diagram-dataflow.png" alt="sknet data flow: network traffic, softflowd, inlet, Kafka, outlet, ClickHouse and ntopng, to the console and the live view, with sensitivity labels" loading="lazy">
+          <figcaption><span class="pill live">Interactive</span> Data flow, sensitivity labelled. <a href="diagrams/sknet.dataflow.html" target="_blank" rel="noopener">Open ↗</a></figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="img/diagram-workflow.png" alt="sknet rollout order: pick a data node, list hops, deploy the stack and port allowlist, run the exporter play, optionally the live play, then verify flows" loading="lazy">
+          <figcaption><span class="pill weekly">Interactive</span> Rollout order. <a href="diagrams/sknet.workflow.html" target="_blank" rel="noopener">Open ↗</a></figcaption>
+        </figure>
+        <figure class="shot">
+          <img src="img/diagram-architecture.png" alt="sknet component map with the collector node and gateway host boundaries" loading="lazy">
+          <figcaption><span class="pill live">Interactive</span> Component map (see Components above). <a href="diagrams/sknet.architecture.html" target="_blank" rel="noopener">Open ↗</a></figcaption>
+        </figure>
+      </div>
+      <p style="margin-top:1.4rem">A plain Markdown version of the component map, which renders directly on GitHub, lives in the <a href="https://github.com/smilinTux/sknet-skworld-io#component-map" target="_blank" rel="noopener">repository README</a>.</p>
+    </section>
+
+    <section id="built-on">
+      <h2><span class="n">§</span>Built on</h2>
+      <div class="callout">
+        <h3><span class="tag-pill">credit</span>Built on Akvorado (AGPL-3.0) and ntopng Community (GPLv3)</h3>
+        <ul>
+          <li><a href="https://github.com/akvorado/akvorado" target="_blank" rel="noopener">Akvorado</a> (<a href="https://github.com/akvorado/akvorado/blob/main/LICENSE" target="_blank" rel="noopener">AGPL-3.0</a>) is the flow collector and console. sknet runs the upstream image, unmodified.</li>
+          <li><a href="https://www.ntop.org/products/traffic-analysis/ntop/" target="_blank" rel="noopener">ntopng Community</a> (<a href="https://github.com/ntop/ntopng/blob/dev/COPYING" target="_blank" rel="noopener">GPLv3</a>) is the live view. sknet runs the upstream container, unmodified.</li>
+          <li><a href="https://github.com/irino/softflowd" target="_blank" rel="noopener">softflowd</a> exports the flow records, installed from the distribution package.</li>
+          <li>Upstream logos and interfaces are kept as their authors made them. sknet only automates deploying and gating them. This site and the skstacks role are MIT licensed.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="ops">
+      <h2>Deploy and operate</h2>
+      <p>sknet is an optional role in <a href="https://github.com/smilinTux/skstacks" target="_blank" rel="noopener">skstacks</a>, deployed with the same swarm and host plays as its siblings: set the data node, the exporter list and the allowlist in your private vault, deploy the stack, run the exporter play on the hosts you chose, then the live play on the gateway. The documentation below covers the overview, the architecture, the multi-hop pattern and day-two operations.</p>
+      <div class="cta">
+        <a class="btn" href="https://github.com/smilinTux/skstacks" target="_blank" rel="noopener">skstacks on GitHub</a>
+        <a class="btn bl" href="/docs.html">Read the docs</a>
+        <a class="btn bl" href="/docs.html?doc=multi-hop-pattern.md">Multi-hop pattern</a>
+      </div>
+    </section>
+
+    <section id="family">
+      <h2>Part of the ecosystem</h2>
+      <p>sknet gives the rest of the fleet a window onto its own traffic. <a href="https://skstacks.skworld.io" target="_blank" rel="noopener">SKStacks</a> is the framework it deploys through, <a href="https://sksec.skworld.io" target="_blank" rel="noopener">sksec</a> guards the edge its UIs sit behind, and <a href="https://skpatch.skworld.io" target="_blank" rel="noopener">skpatch</a> keeps its pinned images current. All part of <a href="https://skworld.io" target="_blank" rel="noopener">SKWorld</a>, the sovereign AI ecosystem where you own the whole stack, from silicon to soul.</p>
+      <div class="cta">
+        <a class="btn bl" href="https://skworld.io" target="_blank" rel="noopener">🐧 Explore SKWorld</a>
+        <a class="btn bl" href="https://skstacks.skworld.io" target="_blank" rel="noopener">📦 Meet SKStacks</a>
+        <a class="btn bl" href="https://sksec.skworld.io" target="_blank" rel="noopener">🛡️ Meet sksec</a>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div class="tag" style="font-size:1.05rem">See the traffic between your networks.</div>
+      <div class="foot-links">
+        <a href="https://skworld.io" target="_blank" rel="noopener">SKWorld</a>
+        <a href="https://skstacks.skworld.io" target="_blank" rel="noopener">SKStacks</a>
+        <a href="https://sksec.skworld.io" target="_blank" rel="noopener">sksec</a>
+        <a href="https://skhub.skworld.io" target="_blank" rel="noopener">skhub</a>
+        <a href="https://skgateway.skworld.io" target="_blank" rel="noopener">skgateway</a>
+        <a href="/docs.html">Docs</a>
+      </div>
+      <p class="mono" style="margin-top:.6rem">part of the SKWorld sovereign AI ecosystem 🐧 · built by <a href="https://github.com/smilinTux" target="_blank" rel="noopener">smilinTux</a> · <a href="https://github.com/smilinTux/sknet-skworld-io/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a></p>
+    </div>
+  </footer>
+</body>
+</html>
